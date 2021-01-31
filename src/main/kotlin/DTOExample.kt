@@ -6,20 +6,19 @@ import kotlin.collections.HashSet
 
 fun main() {
 
-    val persons = getPerson(100)
-    val aRandomPerson = from(persons.values.toMutableList()).get()
+    val users : Map<Long, User> = getUsers(100)
+    val aRandomUser = from(users.values.toMutableList()).get()
 
-    val personInitial = json(fromObject(aRandomPerson)) {
+    val theInitialUser = json(fromObject(aRandomUser)) {
         copySourceToTarget()
     }.getPrettyString()
-    println(personInitial)
+    println(theInitialUser)
 
-    val personDto = json(fromObject(aRandomPerson)) {
-        copySourceToTarget()
-
+    val theInitialUserDto = json(fromObject(aRandomUser)) {
+        "" *= "$"
         - "visits"
         - "creditCards"
-
+        - "pwd"
         "visited" *= {
             expression = "$.visits[*].country"
             processor = {
@@ -28,17 +27,16 @@ fun main() {
                 result
             }
         }
-
         "lastName" /= {
             targetCtx().read<String>("$.lastName").toUpperCase()
         }
-
         "friends" /= {
             targetCtx()
                 .read<ArrayList<Long>>("$.friends")
-                .map { (persons[it]?.firstName + " " + persons[it]?.lastName) }
+                .map { (users[it]?.firstName + " " + users[it]?.lastName) }
                 .toList()
         }
     }.getPrettyString()
-    println(personDto)
+
+    println(theInitialUserDto)
 }

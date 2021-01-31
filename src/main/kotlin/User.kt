@@ -16,7 +16,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter.ISO_DATE
 import kotlin.collections.ArrayList
 
-class Person(
+class User(
     val id: Long,
     val firstName: String,
     val lastName: String,
@@ -41,18 +41,18 @@ class CreditCardInfo(
     val expirationDate: String
 )
 
-fun getPerson(size: Int) : Map<Long, Person> {
+fun getUsers(size: Int) : Map<Long, User> {
 
     val pId = longSeq().increment(10)
     val vId = longSeq().increment(100)
 
-    val persons = constructor(Person::class.java)
+    val persons = constructor(User::class.java)
             .params(
                 pId, // Long
                 names().first(), // String
                 names().last(), // String
                 localDates().past(LocalDate.of(1900, 1, 1)).display(ISO_DATE), // Date
-                filler { ArrayList<Person>() }, // List<Person>
+                filler { ArrayList<User>() }, // List<Person>
                 constructor(Visit::class.java).params(
                     vId,
                     countries().names(),
